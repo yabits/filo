@@ -26,6 +26,7 @@
 #endif
 #include <config.h>
 #include <fs.h>
+#include <gpt.h>
 
 #define DEBUG_THIS CONFIG_DEBUG_BLOCKDEV
 #include <debug.h>
@@ -50,6 +51,94 @@ static inline int has_pc_part_magic(unsigned char *sect)
 static inline int is_pc_extended_part(unsigned char type)
 {
 	return type == 5 || type == 0xf || type == 0x85;
+}
+
+static inline int has_gpt_magic(uint64_t sect)
+{
+        /* "EFI PART" */
+        return sect == 0x5452415020494645;
+}
+
+static inline void print_guid(guid *id)
+{
+        printf("%08lX-%04hX-%04hX-%02hhX%02hhX-%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX",
+                id->Data1, id->Data2, id->Data3,
+                id->Data4[0], id->Data4[1], id->Data4[2], id->Data4[3],
+                id->Data4[4], id->Data4[5], id->Data4[6], id->Data4[7]);
+}
+
+static inline int is_eps(guid *id)
+{
+        return id->Data1 == 0xC12A7328 && id->Data2 == 0xF81F && id->Data3 == 0x11D2 && id->Data4[0] == 0xBA && id->Data4[1] == 0x4B && id->Data4[2] == 0x00 && id->Data4[3] == 0xA0 && id->Data4[4] == 0xC9 && id->Data4[5] == 0x3E && id->Data4[6] == 0xC9 && id->Data4[7] == 0x3B;
+}
+
+static int open_gpt(int part, unsigned long *start_p,
+                            unsigned long *length_p)
+{
+	unsigned char buf[DEV_SECTOR_SIZE];
+	if (!devread(0, 0, sizeof(buf), buf)) {
+		debug("device read failed.\n");
+		return 0;
+	}
+        /* TODO: Check MBR Partition Entry */
+	if (!has_pc_part_magic(buf)) {
+		debug("PC partition table magic number not found.\n");
+		return PARTITION_UNKNOWN;
+	}
+	if (!devread(1, 0, sizeof(buf), buf)) {
+		debug("device read failed.\n");
+		return 0;
+	}
+
+        gptp = (struct gpt_header *)buf;
+        if (!has_gpt_magic(gptp->Signature)) {
+                debug("EFI-compatible partition magic number not found.\n");
+                return 0;
+        }
+        debug("GPT Revision: 0x%x\n", gptp->Revision);
+        /* TODO: Check CRC32 */
+        if (gptp->myLBA != 1) {
+                debug("Invalid myLBA.\n");
+                return 0;
+        }
+        /* TODO: Check AlternativeLBA is valid */
+        debug("AlternateLBA: 0x%08lx\n", gptp->AlternateLBA);
+        debug("FirstUsableLBA: 0x%08lx\n", gptp->FirstUsableLBA);
+        debug("LastUsableLBA: 0x%08lx\n", gptp->LastUsableLBA);
+        printf("Disk GUID: ");
+        print_guid(&gptp->DiskGUID);
+        printf("\n");
+        debug("PartitionEntryLBA: 0x%08lx\n", gptp->PartitionEntryLBA);
+        debug("NumberOfPartitionEntries: 0x%08lx\n", gptp->NumberOfPartitionEntries);
+        debug("SizeOfPartitionEntry: 0x%08lx\n", gptp->SizeOfPartitionEntry);
+
+	unsigned char e_buf[128];
+        for (int i=0; i<gptp->NumberOfPartitionEntries; i++) {
+                if (!devread(2+i*4, 128*(i%4), sizeof(e_buf), e_buf)) {
+                        debug("device read failed.\n");
+                        return 0;
+                }
+                gptep = (struct gpt_entry *)e_buf;
+
+                printf("PartitionTypeGUID: ");
+                print_guid(&gptep->PartitionTypeGUID);
+                printf("\n");
+                printf("UniquePartitionGUID: ");
+                print_guid(&gptep->UniquePartitionGUID);
+                printf("\n");
+                debug("StartingLBA: 0x%08lx\n", gptep->StartingLBA);
+                debug("EndingLBA: 0x%08lx\n", gptep->EndingLBA);
+
+                if (is_eps(&gptep->PartitionTypeGUID)) {
+                        uint64_t Length = gptep->EndingLBA - gptep->StartingLBA;
+                        debug("Length: 0x%08lx\n", Length);
+                        *start_p = gptep->StartingLBA;
+                        *length_p= Length;
+                        return 1;
+                }
+        }
+
+        return 0;
 }
 
 /* IBM-PC/MS-DOS style partitioning scheme */
@@ -316,7 +405,9 @@ int devopen(const char *name, int *reopen)
 		/* partition is specified */
 		int ret;
 		ret =
-		    open_pc_partition(part - 1, &part_start, &part_length);
+		    open_gpt(part - 1, &part_start, &part_length);
+                debug("part_start:  0x%08lx\n", part_start);
+                debug("part_length: 0x%08lx\n", part_length);
 		if (ret == PARTITION_UNKNOWN) {
 			ret =
 			    open_eltorito_image(part - 1, &part_start,
