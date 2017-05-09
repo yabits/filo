@@ -33,6 +33,8 @@ long long simple_strtoll(const char *cp,char **endp,unsigned int base);
 
 struct sys_info;
 int elf_load(const char *filename, const char *cmdline);
+int pe_dump(const char *filename, const char *cmdline);
+int pe_load(const char *filename, const char *cmdline);
 
 #ifdef CONFIG_LINUX_LOADER
 int linux_load(const char *filename, const char *cmdline);

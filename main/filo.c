@@ -130,8 +130,13 @@ int boot(const char *line)
     ret = elf_load(file, param);
     if (ret != LOADER_NOT_SUPPORT)
 	    goto out;
-
+    /*
     ret = linux_load(file, param);
+    if (ret != LOADER_NOT_SUPPORT)
+	    goto out;
+    */
+
+    ret = pe_load(file, param);
     if (ret != LOADER_NOT_SUPPORT)
 	    goto out;
 
