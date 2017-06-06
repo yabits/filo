@@ -300,6 +300,13 @@ config ARTEC_BOOT
 	help
 	  Artecboot Loader Support
 
+config EFI_BOOT
+	bool "EFI Boot"
+	default y
+	depends on TARGET_I386
+	help
+	   EFI Loader Support
+
 endmenu
 
 menu "Debugging & Experimental"
@@ -328,6 +335,7 @@ config DEBUG_ALL
 	select DEBUG_ELTORITO
 	select DEBUG_FLASH
 	select DEBUG_ARTECBOOT
+	select DEBUG_EFIBOOT
 	default n
 
 config DEBUG_ELFBOOT
@@ -393,6 +401,11 @@ config DEBUG_FLASH
 config DEBUG_ARTECBOOT
 	bool "DEBUG_ARTECBOOT"
 	depends on ARTEC_BOOT
+	default n
+
+config DEBUG_EFIBOOT
+	bool "DEBUG_EFIBOOT"
+	depends on EFI_BOOT
 	default n
 
 config DEVELOPER_TOOLS

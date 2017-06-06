@@ -98,6 +98,10 @@ static void init(void)
 #if IS_ENABLED(CONFIG_SLOW_SATA)
     delay(5);
 #endif
+
+//#if IS_ENABLED(EFI_BOOT)
+    EfiCoreMain();
+//#endif
 }
 
 int boot(const char *line)
