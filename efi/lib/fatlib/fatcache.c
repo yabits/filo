@@ -160,7 +160,7 @@ Return Value:
         goto InitializeFatCacheEnd;
     }
 
-    RtlZeroMemory(Volume->FatCache.WindowBuffers, AllocationSize);
+    //RtlZeroMemory(Volume->FatCache.WindowBuffers, AllocationSize);
     Volume->FatCache.Windows = (PVOID *)(Volume->FatCache.WindowBuffers +
                                          WindowCount);
 
@@ -177,7 +177,7 @@ Return Value:
 
     ASSERT(POWER_OF_2(WindowSize));
 
-    Volume->FatCache.WindowShift = RtlCountTrailingZeros32(WindowSize);
+    //Volume->FatCache.WindowShift = RtlCountTrailingZeros32(WindowSize);
     Volume->FatCache.WindowCount = WindowCount;
     Status = STATUS_SUCCESS;
 
@@ -562,7 +562,7 @@ Return Value:
     //
 
     if ((NewValue == FAT_CLUSTER_FREE) && (Original == FAT_CLUSTER_FREE)) {
-        RtlDebugPrint("FAT: Cluster 0x%x was already free!\n", Cluster);
+        //RtlDebugPrint("FAT: Cluster 0x%x was already free!\n", Cluster);
     }
 
     //

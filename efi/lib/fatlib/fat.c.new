@@ -420,7 +420,7 @@ Return Value:
     // Zero out the reserved sectors.
     //
 
-    //RtlZeroMemory(Scratch, BlockSize);
+    RtlZeroMemory(Scratch, BlockSize);
     for (CurrentBlock = 1;
          CurrentBlock < ReservedBlockCount;
          CurrentBlock += 1) {
@@ -451,7 +451,7 @@ Return Value:
 
         ASSERT(BlocksPerFat * BlockSize <= ScratchSize);
 
-        //RtlZeroMemory(Fat, BlocksPerFat * BlockSize);
+        RtlZeroMemory(Fat, BlocksPerFat * BlockSize);
         FAT12_WRITE_CLUSTER(Fat, 0, 0xF00 | Media);
         FAT12_WRITE_CLUSTER(Fat, 1, FAT12_CLUSTER_END_STAMP);
 
@@ -486,7 +486,7 @@ Return Value:
 
     } else {
         for (FatIndex = 0; FatIndex < NumberOfFats; FatIndex += 1) {
-            //RtlZeroMemory(Fat, BlockSize);
+            RtlZeroMemory(Fat, BlockSize);
             for (CurrentBlock = 0;
                  CurrentBlock < BlocksPerFat;
                  CurrentBlock += 1) {
@@ -574,7 +574,7 @@ Return Value:
                 //
 
                 if (CurrentBlock == 0) {
-                    //RtlZeroMemory(Fat, BlockSize);
+                    RtlZeroMemory(Fat, BlockSize);
                 }
             }
         }
@@ -584,7 +584,7 @@ Return Value:
     // Clear out the root directory. This is either a fixed size or one cluster.
     //
 
-    //RtlZeroMemory(Scratch, BlockSize);
+    RtlZeroMemory(Scratch, BlockSize);
     for (CurrentBlock = 0;
          CurrentBlock < RootDirectorySize;
          CurrentBlock += 1) {
@@ -607,7 +607,7 @@ Return Value:
 
     InformationSector = 0;
     if (Format == Fat32Format) {
-        //RtlZeroMemory(Scratch, BlockSize);
+        RtlZeroMemory(Scratch, BlockSize);
         Information = (PFAT32_INFORMATION_SECTOR)Scratch;
         Information->Signature1 = FAT32_SIGNATURE1;
         Information->Signature2 = FAT32_SIGNATURE2;
@@ -631,11 +631,11 @@ Return Value:
     // Create the boot sector.
     //
 
-    //RtlZeroMemory(Scratch, BlockSize);
+    RtlZeroMemory(Scratch, BlockSize);
     BootSector = (PFAT_BOOT_SECTOR)Scratch;
     BootSector->Jump[0] = FAT_FIRST_JUMP_BYTE;
     BootSector->Jump[2] = FAT_THIRD_JUMP_BYTE;
-    //RtlStringCopy((PCHAR)BootSector->OemName, "MSDOS5.0", 9);
+    RtlStringCopy((PCHAR)BootSector->OemName, "MSDOS5.0", 9);
     BootSector->BytesPerSector = BlockSize;
     BootSector->SectorsPerCluster = ClusterSize / BlockSize;
     BootSector->ReservedSectorCount = ReservedBlockCount;
@@ -695,14 +695,14 @@ Return Value:
                                                    FAT_EXTENDED_BOOT_SIGNATURE;
 
         BootSector->Fat32Parameters.SerialNumber = FatpGetRandomNumber();
-        //RtlCopyMemory(BootSector->Fat32Parameters.VolumeLabel,
-        //              "MinocaOS   ",
-        //              11);
+        RtlCopyMemory(BootSector->Fat32Parameters.VolumeLabel,
+                      "MinocaOS   ",
+                      11);
 
         Identifier = FAT32_IDENTIFIER;
-        //RtlCopyMemory(BootSector->Fat32Parameters.FatType,
-        //              &Identifier,
-        //              sizeof(ULONGLONG));
+        RtlCopyMemory(BootSector->Fat32Parameters.FatType,
+                      &Identifier,
+                      sizeof(ULONGLONG));
 
         BootSector->Fat32Parameters.Signature = FAT_BOOT_SIGNATURE;
 
@@ -716,9 +716,9 @@ Return Value:
                                                    FAT_EXTENDED_BOOT_SIGNATURE;
 
         BootSector->FatParameters.SerialNumber = FatpGetRandomNumber();
-        //RtlCopyMemory(BootSector->FatParameters.VolumeLabel,
-        //              "MinocaOS   ",
-        //              11);
+        RtlCopyMemory(BootSector->FatParameters.VolumeLabel,
+                      "MinocaOS   ",
+                      11);
 
         if (Format == Fat12Format) {
             Identifier = FAT12_IDENTIFIER;
@@ -727,9 +727,9 @@ Return Value:
             Identifier = FAT16_IDENTIFIER;
         }
 
-        //RtlCopyMemory(BootSector->FatParameters.FatType,
-        //              &Identifier,
-        //              sizeof(ULONGLONG));
+        RtlCopyMemory(BootSector->FatParameters.FatType,
+                      &Identifier,
+                      sizeof(ULONGLONG));
 
         BootSector->FatParameters.Signature = FAT_BOOT_SIGNATURE;
     }
@@ -884,14 +884,14 @@ Return Value:
          FAT_EXTENDED_BOOT_SIGNATURE2)) {
 
         Fat32ExtendedBiosParameters = TRUE;
-        //RtlCopyMemory(&Identifier,
-        //              BootSector->Fat32Parameters.FatType,
-        //              sizeof(ULONGLONG));
+        RtlCopyMemory(&Identifier,
+                      BootSector->Fat32Parameters.FatType,
+                      sizeof(ULONGLONG));
 
     } else {
-        //RtlCopyMemory(&Identifier,
-        //              BootSector->FatParameters.FatType,
-        //              sizeof(ULONGLONG));
+        RtlCopyMemory(&Identifier,
+                      BootSector->FatParameters.FatType,
+                      sizeof(ULONGLONG));
     }
 
     if ((Identifier != FAT_IDENTIFIER) &&
@@ -933,10 +933,10 @@ Return Value:
         goto MountEnd;
     }
 
-    //RtlZeroMemory(FatVolume, sizeof(FAT_VOLUME));
-    //RtlCopyMemory(&(FatVolume->Device),
-    //              BlockDeviceParameters,
-    //              sizeof(BLOCK_DEVICE_PARAMETERS));
+    RtlZeroMemory(FatVolume, sizeof(FAT_VOLUME));
+    RtlCopyMemory(&(FatVolume->Device),
+                  BlockDeviceParameters,
+                  sizeof(BLOCK_DEVICE_PARAMETERS));
 
     FatpInitializeFileMappingTree(FatVolume);
     FatVolume->BlockShift =
@@ -1347,7 +1347,7 @@ Return Value:
         goto OpenFileIdEnd;
     }
 
-    //RtlZeroMemory(FatFile, sizeof(FAT_FILE));
+    RtlZeroMemory(FatFile, sizeof(FAT_FILE));
     FatFile->Volume = FatVolume;
     FatFile->OpenFlags = Flags;
     FatFile->SeekTable[0] = FirstCluster;
@@ -1648,13 +1648,13 @@ Return Value:
         Properties->BlockSize = FatVolume->ClusterSize;
         Properties->BlockCount = 0;
         FatGetCurrentSystemTime(&(Properties->StatusChangeTime));
-        //RtlCopyMemory(&(Properties->ModifiedTime),
-        //              &(Properties->StatusChangeTime),
-        //              sizeof(SYSTEM_TIME));
+        RtlCopyMemory(&(Properties->ModifiedTime),
+                      &(Properties->StatusChangeTime),
+                      sizeof(SYSTEM_TIME));
 
-        //RtlCopyMemory(&(Properties->AccessTime),
-        //              &(Properties->StatusChangeTime),
-        //              sizeof(SYSTEM_TIME));
+        RtlCopyMemory(&(Properties->AccessTime),
+                      &(Properties->StatusChangeTime),
+                      sizeof(SYSTEM_TIME));
 
         Status = STATUS_SUCCESS;
         goto LookupEnd;
@@ -2018,12 +2018,12 @@ Return Value:
 
         *ElementsRead += EntriesRead;
         if (IncludeDotDirectories == FALSE) {
-            //if ((RtlAreStringsEqual(Name, ".", NameSize) != FALSE) ||
-            //    (RtlAreStringsEqual(Name, "..", NameSize) != FALSE)) {
+            if ((RtlAreStringsEqual(Name, ".", NameSize) != FALSE) ||
+                (RtlAreStringsEqual(Name, "..", NameSize) != FALSE)) {
 
                 EntryOffset += EntriesRead;
                 continue;
-            //}
+            }
         }
 
         //
@@ -2649,7 +2649,7 @@ Return Value:
     // It's time to grow the file. Seek to the old end of the file.
     //
 
-    //RtlZeroMemory(&Seek, sizeof(FAT_SEEK_INFORMATION));
+    RtlZeroMemory(&Seek, sizeof(FAT_SEEK_INFORMATION));
     Status = FatFileSeek(FileToken,
                          NULL,
                          0,
@@ -3502,8 +3502,8 @@ Return Value:
             TableIndex = 1;
         }
 
-        //RtlZeroMemory(&(File->SeekTable[TableIndex]),
-        //              (FAT_SEEK_TABLE_SIZE - TableIndex) * FAT32_CLUSTER_WIDTH);
+        RtlZeroMemory(&(File->SeekTable[TableIndex]),
+                      (FAT_SEEK_TABLE_SIZE - TableIndex) * FAT32_CLUSTER_WIDTH);
     }
 
     //

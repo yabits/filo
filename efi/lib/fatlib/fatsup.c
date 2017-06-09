@@ -210,7 +210,7 @@ Return Value:
             continue;
         }
 
-        if (RtlAreStringsEqual(Name, PotentialName, NameLength - 1) != FALSE) {
+        //if (RtlAreStringsEqual(Name, PotentialName, NameLength - 1) != FALSE) {
 
             ASSERT(Offset != 0);
 
@@ -247,7 +247,7 @@ Return Value:
             }
 
             break;
-        }
+        //}
     }
 
     Status = STATUS_SUCCESS;
@@ -361,7 +361,7 @@ Return Value:
     // Initialize most of the directory attributes.
     //
 
-    RtlZeroMemory(&DirectoryEntry, sizeof(FAT_DIRECTORY_ENTRY));
+    //RtlZeroMemory(&DirectoryEntry, sizeof(FAT_DIRECTORY_ENTRY));
     DirectoryEntry.FileAttributes = Attributes;
 
     //
@@ -406,12 +406,12 @@ Return Value:
         if ((EncodedProperties.Owner != FileProperties->UserId) ||
             (EncodedProperties.Group != FileProperties->GroupId)) {
 
-            RtlDebugPrint("FAT: Truncated UID/GID: FILE_PROPERTIES 0x%x "
-                          "(ID 0x%I64x UID 0x%x GID 0x%x)\n",
-                          FileProperties,
-                          FileProperties->FileId,
-                          FileProperties->UserId,
-                          FileProperties->GroupId);
+            //RtlDebugPrint("FAT: Truncated UID/GID: FILE_PROPERTIES 0x%x "
+            //              "(ID 0x%I64x UID 0x%x GID 0x%x)\n",
+            //              FileProperties,
+            //              FileProperties->FileId,
+            //              FileProperties->UserId,
+            //              FileProperties->GroupId);
         }
 
         EncodedProperties.Permissions = FileProperties->Permissions &
@@ -761,7 +761,7 @@ Return Value:
     //
 
     if (WriteEndEntry != FALSE) {
-        RtlZeroMemory(&DirectoryEntry, sizeof(FAT_DIRECTORY_ENTRY));
+        //RtlZeroMemory(&DirectoryEntry, sizeof(FAT_DIRECTORY_ENTRY));
         Status = FatpWriteDirectory(&DirectoryContext,
                                     &DirectoryEntry,
                                     1,
@@ -1066,9 +1066,9 @@ Return Value:
             // Copy the directory information over.
             //
 
-            RtlCopyMemory(DirectoryEntry,
-                          &Entry,
-                          sizeof(FAT_DIRECTORY_ENTRY));
+            //RtlCopyMemory(DirectoryEntry,
+            //              &Entry,
+            //              sizeof(FAT_DIRECTORY_ENTRY));
 
             //
             // If the checksum matches, then the filename is already in the
@@ -1118,8 +1118,8 @@ Return Value:
 
                 FileName[CharacterIndex] = Entry.DosName[SourceIndex];
                 if ((Entry.CaseInformation & FAT_CASE_BASENAME_LOWER) != 0) {
-                    FileName[CharacterIndex] = RtlConvertCharacterToLowerCase(
-                                                     FileName[CharacterIndex]);
+                    //FileName[CharacterIndex] = RtlConvertCharacterToLowerCase(
+                    //                                 FileName[CharacterIndex]);
                 }
 
                 CharacterIndex += 1;
@@ -1154,9 +1154,9 @@ Return Value:
                     if ((Entry.CaseInformation &
                          FAT_CASE_EXTENSION_LOWER) != 0) {
 
-                        FileName[CharacterIndex] =
-                                      RtlConvertCharacterToLowerCase(
-                                                     FileName[CharacterIndex]);
+                        //FileName[CharacterIndex] =
+                                      //RtlConvertCharacterToLowerCase(
+                                      //               FileName[CharacterIndex]);
                     }
 
                     CharacterIndex += 1;
@@ -1267,7 +1267,7 @@ Return Value:
     }
 
     if (*NextCluster == FAT_CLUSTER_FREE) {
-        RtlDebugPrint("FAT: Next cluster of 0 for 0x%x.\n", CurrentCluster);
+        //RtlDebugPrint("FAT: Next cluster of 0 for 0x%x.\n", CurrentCluster);
         *NextCluster = Volume->ClusterEnd;
     }
 
@@ -1612,12 +1612,12 @@ Return Value:
             //
 
             if (Cluster == FAT_CLUSTER_FREE) {
-                RtlDebugPrint("FAT: Freeing cluster 0.\n");
+                //RtlDebugPrint("FAT: Freeing cluster 0.\n");
 
             } else {
-                RtlDebugPrint("FAT: Freeing invalid cluster 0x%x, total 0x%x\n",
-                              Cluster,
-                              TotalClusters);
+                //RtlDebugPrint("FAT: Freeing invalid cluster 0x%x, total 0x%x\n",
+                //              Cluster,
+                //              TotalClusters);
             }
 
             Status = STATUS_SUCCESS;
@@ -2249,7 +2249,7 @@ Return Value:
     ASSERT((Cluster < FAT_CLUSTER_BEGIN) || (Cluster > Volume->ClusterBad));
 
     if (Entry->FileSizeInBytes != 0) {
-        RtlDebugPrint("FAT: File size was non-zero but had no cluster.\n");
+        //RtlDebugPrint("FAT: File size was non-zero but had no cluster.\n");
         Entry->FileSizeInBytes = 0;
     }
 
@@ -2500,7 +2500,7 @@ Return Value:
 
 {
 
-    RtlZeroMemory(DirectoryContext, sizeof(FAT_DIRECTORY_CONTEXT));
+    //RtlZeroMemory(DirectoryContext, sizeof(FAT_DIRECTORY_CONTEXT));
     DirectoryContext->File = DirectoryFile;
     return;
 }
@@ -3206,10 +3206,10 @@ Return Value:
     FatFineTime = 0;
     if (SystemTime == NULL) {
         FatGetCurrentSystemTime(&CurrentTime);
-        Status = RtlSystemTimeToGmtCalendarTime(&CurrentTime, &CalendarTime);
+        //Status = RtlSystemTimeToGmtCalendarTime(&CurrentTime, &CalendarTime);
 
     } else {
-        Status = RtlSystemTimeToGmtCalendarTime(SystemTime, &CalendarTime);
+        //Status = RtlSystemTimeToGmtCalendarTime(SystemTime, &CalendarTime);
     }
 
     if (!KSUCCESS(Status)) {
@@ -3291,7 +3291,7 @@ Return Value:
     CALENDAR_TIME CalendarTime;
     KSTATUS Status;
 
-    RtlZeroMemory(&CalendarTime, sizeof(CALENDAR_TIME));
+    //RtlZeroMemory(&CalendarTime, sizeof(CALENDAR_TIME));
     CalendarTime.Year = ((Date & FAT_DATE_YEAR_MASK) >> FAT_DATE_YEAR_SHIFT) +
                         FAT_EPOCH_YEAR;
 
@@ -3317,9 +3317,9 @@ Return Value:
     CalendarTime.Second += Time10ms / FAT_10MS_PER_SECOND;
     Time10ms %= FAT_10MS_PER_SECOND;
     CalendarTime.Nanosecond = Time10ms * FAT_NANOSECONDS_PER_10MS;
-    Status = RtlCalendarTimeToSystemTime(&CalendarTime, SystemTime);
+    //Status = RtlCalendarTimeToSystemTime(&CalendarTime, SystemTime);
     if (!KSUCCESS(Status)) {
-        RtlZeroMemory(SystemTime, sizeof(SYSTEM_TIME));
+        //RtlZeroMemory(SystemTime, sizeof(SYSTEM_TIME));
     }
 
     return;
@@ -3557,7 +3557,7 @@ Return Value:
     // directory entries. Start with the dot entry.
     //
 
-    RtlCopyMemory(&(DirectoryEntries[0]), Entry, sizeof(FAT_DIRECTORY_ENTRY));
+    //RtlCopyMemory(&(DirectoryEntries[0]), Entry, sizeof(FAT_DIRECTORY_ENTRY));
     DirectoryEntries[0].FileAttributes = FAT_SUBDIRECTORY;
     DirectoryEntries[0].CaseInformation = 0;
     for (NameIndex = 0; NameIndex < FAT_FILE_LENGTH; NameIndex += 1) {
@@ -3576,9 +3576,9 @@ Return Value:
     // is set to zero if its parent is the root directory.
     //
 
-    RtlCopyMemory(&(DirectoryEntries[1]),
-                  &(DirectoryEntries[0]),
-                  sizeof(FAT_DIRECTORY_ENTRY));
+    //RtlCopyMemory(&(DirectoryEntries[1]),
+    //              &(DirectoryEntries[0]),
+    //              sizeof(FAT_DIRECTORY_ENTRY));
 
     DirectoryEntries[1].DosName[1] = '.';
     if (ParentDirectoryFileId == FatVolume->RootDirectoryCluster) {
@@ -3748,7 +3748,7 @@ Return Value:
     if (((Volume->Flags & FAT_VOLUME_FLAG_COMPATIBILITY_MODE) != 0) ||
         (FatCompatibilityMode != FALSE)) {
 
-        LastDot = RtlStringFindCharacterRight(FileName, '.', FileNameLength);
+        //LastDot = RtlStringFindCharacterRight(FileName, '.', FileNameLength);
         if (LastDot != NULL) {
             if ((FileNameLength - ((UINTN)LastDot + 1 - (UINTN)FileName)) <=
                 FAT_FILE_EXTENSION_LENGTH) {
@@ -3782,15 +3782,15 @@ Return Value:
                 break;
             }
 
-            if (!RtlIsCharacterAlphabetic(FileName[CharacterIndex])) {
-                continue;
-            }
+            //if (!RtlIsCharacterAlphabetic(FileName[CharacterIndex])) {
+            //    continue;
+            //}
 
             //
             // Record the case of the first character and continue.
             //
 
-            IsCurrentLower = RtlIsCharacterLowerCase(FileName[CharacterIndex]);
+            //IsCurrentLower = RtlIsCharacterLowerCase(FileName[CharacterIndex]);
             if (IsLowerValid == FALSE) {
                 IsLower = IsCurrentLower;
                 IsLowerValid = TRUE;
@@ -3822,16 +3822,16 @@ Return Value:
                     break;
                 }
 
-                if (!RtlIsCharacterAlphabetic(LastDot[CharacterIndex + 1])) {
-                    continue;
-                }
+                //if (!RtlIsCharacterAlphabetic(LastDot[CharacterIndex + 1])) {
+                //    continue;
+                //}
 
                 //
                 // Record the case of the first character and continue.
                 //
 
-                IsCurrentLower = RtlIsCharacterLowerCase(
-                                                  LastDot[CharacterIndex + 1]);
+                //IsCurrentLower = RtlIsCharacterLowerCase(
+                //                                  LastDot[CharacterIndex + 1]);
 
                 if (IsLowerValid == FALSE) {
                     IsLower = IsCurrentLower;
@@ -3883,7 +3883,7 @@ Return Value:
     //
 
     Entry = &(Entries[EntriesNeeded - 1]);
-    RtlCopyMemory(Entry, BaseEntry, sizeof(FAT_DIRECTORY_ENTRY));
+    //RtlCopyMemory(Entry, BaseEntry, sizeof(FAT_DIRECTORY_ENTRY));
     Name = (PCHAR)(Entry->DosName);
     if (LongEntryNeeded != FALSE) {
 
@@ -3905,7 +3905,7 @@ Return Value:
     //
 
     } else {
-        RtlSetMemory(Name, ' ', FAT_NAME_SIZE);
+        //RtlSetMemory(Name, ' ', FAT_NAME_SIZE);
 
         //
         // Copy the file name in.
@@ -3931,10 +3931,10 @@ Return Value:
             //
 
             ShortCharacter = FileName[CharacterIndex];
-            if (RtlIsCharacterLowerCase(ShortCharacter)) {
-                ShortCharacter = RtlConvertCharacterToUpperCase(ShortCharacter);
-                Entry->CaseInformation |= FAT_CASE_BASENAME_LOWER;
-            }
+            //if (RtlIsCharacterLowerCase(ShortCharacter)) {
+            //    ShortCharacter = RtlConvertCharacterToUpperCase(ShortCharacter);
+            //    Entry->CaseInformation |= FAT_CASE_BASENAME_LOWER;
+            //}
 
             Entry->DosName[CharacterIndex] = ShortCharacter;
         }
@@ -3962,12 +3962,12 @@ Return Value:
                 //
 
                 ShortCharacter = LastDot[CharacterIndex + 1];
-                if (RtlIsCharacterLowerCase(ShortCharacter)) {
-                    ShortCharacter = RtlConvertCharacterToUpperCase(
-                                                               ShortCharacter);
+                //if (RtlIsCharacterLowerCase(ShortCharacter)) {
+                //    ShortCharacter = RtlConvertCharacterToUpperCase(
+                //                                               ShortCharacter);
 
-                    Entry->CaseInformation |= FAT_CASE_EXTENSION_LOWER;
-                }
+                //    Entry->CaseInformation |= FAT_CASE_EXTENSION_LOWER;
+                //}
 
                 Entry->DosExtension[CharacterIndex] = ShortCharacter;
             }

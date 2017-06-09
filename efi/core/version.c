@@ -167,24 +167,25 @@ Return Value:
     VersionInformation->BuildTime.Nanoseconds = 0;
     VersionInformation->ProductName = NULL;
     VersionInformation->BuildString = NULL;
-    BuildStringSize = RtlStringLength(EfiBuildString);
+    //BuildStringSize = RtlStringLength(EfiBuildString);
+    //TODO: use with libpayload
     if (BuildStringSize != 0) {
         BuildStringSize += 1;
     }
 
-    ProductNameSize = RtlStringLength(EfiProductName) + 1;
+    //ProductNameSize = RtlStringLength(EfiProductName) + 1;
     if ((BufferSize != NULL) && (Buffer != NULL)) {
         if (*BufferSize < BuildStringSize + ProductNameSize) {
             Status = STATUS_BUFFER_TOO_SMALL;
 
         } else {
-            RtlCopyMemory(Buffer, EfiProductName, ProductNameSize);
+            //RtlCopyMemory(Buffer, EfiProductName, ProductNameSize);
             VersionInformation->ProductName = Buffer;
             if (BuildStringSize != 0) {
                 VersionInformation->BuildString = Buffer + ProductNameSize;
-                RtlCopyMemory(VersionInformation->BuildString,
-                              EfiBuildString,
-                              BuildStringSize);
+                //RtlCopyMemory(VersionInformation->BuildString,
+                //              EfiBuildString,
+                //              BuildStringSize);
             }
         }
     }

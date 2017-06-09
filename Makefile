@@ -128,6 +128,7 @@ CPPFLAGS += -I$(ARCHDIR-y)/include -Iinclude -I$(obj)
 CPPFLAGS += -I$(GCCINCDIR) -include $(INCPAYLOAD)/kconfig.h
 CPPFLAGS += -Iefi/include
 CPPFLAGS += -I/home/akira/Dropbox/Documentation/minoca/os/include
+CPPFLAGS += -Iefi/lib/rtl
 
 
 CFLAGS := -Wall -Wshadow -Os -pipe
@@ -188,7 +189,9 @@ $(obj)/%.o: $(src)/%.c
 
 $(obj)/%.S.o: $(src)/%.S
 	printf "  AS      $(subst $(shell pwd)/,,$(@))\n"
-	AS=$(AS) $(LPAS) $(ASFLAGS) -o $@ $<
+	#WORKAROUND
+	$(CC) -E $(CPPFLAGS) $^ > $(obj)/tmp.S
+	AS=$(AS) $(LPAS) $(ASFLAGS) -o $@ $(obj)/tmp.S
 
 $(obj)/%.map: $(obj)/%
 	printf "  SYMS    $(subst $(shell pwd)/,,$(@))\n"

@@ -17,3 +17,5 @@
 #
 
 include efi/core/Makefile.inc
+include efi/lib/Makefile.inc
+include efi/plat/Makefile.inc

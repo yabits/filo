@@ -94,15 +94,16 @@ Return Value:
     //
 
     va_start(ArgumentList, Format);
-    KdPrintWithArgumentList(Format, ArgumentList);
+    //TODO
+    //KdPrintWithArgumentList(Format, ArgumentList);
     va_end(ArgumentList);
     if (EfiSystemTable->StdErr != NULL) {
         va_start(ArgumentList, Format);
-        RtlFormatString(Ascii,
-                        sizeof(Ascii) - 1,
-                        CharacterEncodingAscii,
-                        Format,
-                        ArgumentList);
+        //RtlFormatString(Ascii,
+        //                sizeof(Ascii) - 1,
+        //                CharacterEncodingAscii,
+        //                Format,
+        //                ArgumentList);
 
         Index = 0;
         while (Ascii[Index] != '\0') {
@@ -153,7 +154,7 @@ Return Value:
                   SourceFile,
                   SourceLine);
 
-    RtlDebugService(EXCEPTION_ASSERTION_FAILURE, NULL);
+    //RtlDebugService(EXCEPTION_ASSERTION_FAILURE, NULL);
     return;
 }
 
@@ -324,7 +325,7 @@ Return Value:
     //
 
     while (TRUE) {
-        RtlDebugBreak();
+        //RtlDebugBreak();
     }
 }
 

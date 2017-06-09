@@ -134,7 +134,7 @@ Return Value:
 
     EFI_STATUS EfiStatus;
 
-    EfiStatus = EfiPlatformDebugDeviceReset(BaudRate);
+    //EfiStatus = EfiPlatformDebugDeviceReset(BaudRate);
     if (EfiStatus == EFI_UNSUPPORTED) {
         return STATUS_NOT_SUPPORTED;
 
@@ -179,7 +179,7 @@ Return Value:
 
     EFI_STATUS EfiStatus;
 
-    EfiStatus = EfiPlatformDebugDeviceTransmit(Data, Size);
+    //EfiStatus = EfiPlatformDebugDeviceTransmit(Data, Size);
     if (EFI_ERROR(EfiStatus)) {
         return STATUS_DEVICE_IO_ERROR;
     }
@@ -227,7 +227,7 @@ Return Value:
     UINTN NaturalSize;
 
     NaturalSize = *Size;
-    EfiStatus = EfiPlatformDebugDeviceReceive(Data, &NaturalSize);
+    //EfiStatus = EfiPlatformDebugDeviceReceive(Data, &NaturalSize);
     *Size = NaturalSize;
     if (EfiStatus == EFI_NOT_READY) {
         return STATUS_NO_DATA_AVAILABLE;
@@ -270,7 +270,7 @@ Return Value:
     EFI_STATUS EfiStatus;
     BOOLEAN ReceiveAvailable;
 
-    EfiStatus = EfiPlatformDebugDeviceGetStatus(&ReceiveAvailable);
+    //EfiStatus = EfiPlatformDebugDeviceGetStatus(&ReceiveAvailable);
     *ReceiveDataAvailable = ReceiveAvailable;
     if (EFI_ERROR(EfiStatus)) {
         return STATUS_DEVICE_IO_ERROR;
@@ -303,7 +303,7 @@ Return Value:
 
 {
 
-    EfiPlatformDebugDeviceDisconnect();
+    //EfiPlatformDebugDeviceDisconnect();
     return;
 }
 

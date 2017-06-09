@@ -507,10 +507,11 @@ Return Value:
                                   FrameBuffer.Height;
 
         FrameBuffer.Header.Type = SystemResourceFrameBuffer;
-        VideoStatus = VidInitialize(&EfiVideoContext, &FrameBuffer);
+        //VideoStatus = VidInitialize(&EfiVideoContext, &FrameBuffer);
         if (KSUCCESS(VideoStatus)) {
-            VidSetPalette(&EfiVideoContext, &EfiVideoPalette, NULL);
-            VidClearScreen(&EfiVideoContext, 0, 0, -1, -1);
+            //TODO repalce below
+            //VidSetPalette(&EfiVideoContext, &EfiVideoPalette, NULL);
+            //VidClearScreen(&EfiVideoContext, 0, 0, -1, -1);
             Status = EFI_SUCCESS;
 
         } else {
@@ -699,11 +700,11 @@ Return Value:
             } else {
                 EfiCopyMem(FrameBuffer, LineOne, CopySize);
                 LastLineY = (RowCount - 1) * CellHeight;
-                VidClearScreen(&EfiVideoContext,
-                               0,
-                               LastLineY,
-                               ColumnCount * CellWidth,
-                               LastLineY + CellHeight);
+                //VidClearScreen(&EfiVideoContext,
+                //               0,
+                //               LastLineY,
+                //               ColumnCount * CellWidth,
+                //               LastLineY + CellHeight);
             }
 
         } else if (*String == CHAR_CARRIAGE_RETURN) {
@@ -721,21 +722,21 @@ Return Value:
                 if (Mode->CursorRow == RowCount - 1) {
                     EfiCopyMem(FrameBuffer, LineOne, CopySize);
                     LastLineY = (RowCount - 1) * CellHeight;
-                    VidClearScreen(&EfiVideoContext,
-                                   0,
-                                   LastLineY,
-                                   ColumnCount * CellWidth,
-                                   LastLineY + CellHeight);
+                    //VidClearScreen(&EfiVideoContext,
+                    //               0,
+                    //               LastLineY,
+                    //               ColumnCount * CellWidth,
+                    //               LastLineY + CellHeight);
 
                 } else {
                     Mode->CursorRow += 1;
                 }
             }
 
-            VidPrintString(&EfiVideoContext,
-                           Mode->CursorColumn,
-                           Mode->CursorRow,
-                           Ascii);
+            //VidPrintString(&EfiVideoContext,
+            //               Mode->CursorColumn,
+            //               Mode->CursorRow,
+            //               Ascii);
 
             Mode->CursorColumn += 1;
 
@@ -982,7 +983,7 @@ Return Value:
 
     ASSERT(Console->Magic == EFI_GRAPHICS_CONSOLE_MAGIC);
 
-    VidClearScreen(&EfiVideoContext, 0, 0, -1, -1);
+    //VidClearScreen(&EfiVideoContext, 0, 0, -1, -1);
     return This->SetCursorPosition(This, 0, 0);
 }
 

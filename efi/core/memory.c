@@ -745,7 +745,8 @@ Return Value:
     // Get the blank platform memory map.
     //
 
-    Status = EfiPlatformGetInitialMemoryMap(&PlatformMap, &PlatformMapSize);
+    //TODO
+    //Status = EfiPlatformGetInitialMemoryMap(&PlatformMap, &PlatformMapSize);
     if (EFI_ERROR(Status)) {
         goto CoreInitializeMemoryServicesEnd;
     }

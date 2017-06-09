@@ -16,5 +16,4 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-include efi/lib/fatlib/Makefile.inc
-include efi/lib/rtl/Makefile.inc
+TARGETS-y += efi/core/emptyrd/

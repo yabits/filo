@@ -16,5 +16,13 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-include efi/lib/fatlib/Makefile.inc
-include efi/lib/rtl/Makefile.inc
+TARGETS-y += efi/plat/bios/acpi.o
+#TARGETS-y += efi/plat/bios/acpi.o efi/plat/bios/bioscall.o
+#TARGETS-y += efi/plat/bios/biosfwv.S.o efi/plat/bios/disk.o
+TARGETS-y += efi/plat/bios/disk.o
+#TARGETS-y += efi/plat/bios/debug.o efi/plat/bios/fwvol.o
+#TARGETS-y += efi/plat/bios/intr.o efi/plat/bios/main.o
+TARGETS-y += efi/plat/bios/intr.o 
+TARGETS-y += efi/plat/bios/memmap.o efi/plat/bios/timer.o
+TARGETS-y += efi/plat/bios/video.o
+

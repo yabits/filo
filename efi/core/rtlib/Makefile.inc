@@ -16,8 +16,6 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-include efi/core/x86/Makefile.inc
-
 TARGETS-y += efi/core/acpi.o efi/core/acpitabs.o
 TARGETS-y += efi/core/basepe.o efi/core/bdsboot.o
 TARGETS-y += efi/core/bdscon.o efi/core/bdsentry.o

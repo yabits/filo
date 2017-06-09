@@ -170,7 +170,8 @@ Return Value:
     VA_START(ArgumentList, Table);
     Argument = VA_ARG(ArgumentList, CHAR8 *);
     while (Argument != NULL) {
-        StringsLength += RtlStringLength(Argument) + 1;
+        //TODO
+        //StringsLength += RtlStringLength(Argument) + 1;
         Argument = VA_ARG(ArgumentList, CHAR8 *);
     }
 
@@ -254,9 +255,9 @@ Return Value:
     // Copy the new structure onto the end.
     //
 
-    RtlCopyMemory(EfiSmbiosEntryPoint + EfiSmbiosAllocationSize,
-                  TableHeader,
-                  TableHeader->Length);
+    //RtlCopyMemory(EfiSmbiosEntryPoint + EfiSmbiosAllocationSize,
+    //              TableHeader,
+    //              TableHeader->Length);
 
     StringsLength = 0;
     CurrentPointer = EfiSmbiosEntryPoint +
@@ -266,7 +267,7 @@ Return Value:
     VA_START(ArgumentList, Table);
     Argument = VA_ARG(ArgumentList, CHAR8 *);
     while (Argument != NULL) {
-        StringLength = RtlStringLength(Argument) + 1;
+        //StringLength = RtlStringLength(Argument) + 1;
         EfiCopyMem(CurrentPointer, Argument, StringLength);
         StringsLength += StringLength;
         CurrentPointer += StringLength;

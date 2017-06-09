@@ -233,7 +233,7 @@ Return Value:
 {
 
     RtlDebugPrint(" *** Divide by zero ***\n");
-    KdDebugExceptionHandler(EXCEPTION_DIVIDE_BY_ZERO, NULL, TrapFrame);
+    //KdDebugExceptionHandler(EXCEPTION_DIVIDE_BY_ZERO, NULL, TrapFrame);
     return;
 }
 
@@ -282,7 +282,7 @@ Return Value:
         RtlDebugPrint(", Read ***\n");
     }
 
-    KdDebugExceptionHandler(EXCEPTION_ACCESS_VIOLATION, NULL, TrapFrame);
+    //KdDebugExceptionHandler(EXCEPTION_ACCESS_VIOLATION, NULL, TrapFrame);
     return;
 }
 

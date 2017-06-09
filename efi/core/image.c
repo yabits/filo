@@ -937,12 +937,12 @@ Return Value:
 
                 DebuggerModule->Size = Image->ImagePageCount << EFI_PAGE_SHIFT;
                 DebuggerModule->EntryPoint = Image->EntryPoint;
-                RtlStringCopy(DebuggerModule->BinaryName,
-                              AsciiFileName,
-                              AsciiFileNameSize);
+                //RtlStringCopy(DebuggerModule->BinaryName,
+                //              AsciiFileName,
+                //              AsciiFileNameSize);
 
                 Image->DebuggerData = DebuggerModule;
-                KdReportModuleChange(DebuggerModule, TRUE);
+                //KdReportModuleChange(DebuggerModule, TRUE);
             }
 
             EfiCoreFreePool(AsciiFileName);
@@ -1699,9 +1699,9 @@ Return Value:
         goto CoreLoadPeImageEnd;
     }
 
-    EfiCoreInvalidateInstructionCacheRange(
-                             (VOID *)(UINTN)(Image->ImageContext.ImageAddress),
-                             (UINTN)(Image->ImageContext.ImageSize));
+    //EfiCoreInvalidateInstructionCacheRange(
+    //                         (VOID *)(UINTN)(Image->ImageContext.ImageAddress),
+    //                         (UINTN)(Image->ImageContext.ImageSize));
 
     Image->Machine = Image->ImageContext.Machine;
 
@@ -1884,7 +1884,7 @@ Return Value:
         //
 
         if (Image->DebuggerData != NULL) {
-            KdReportModuleChange(Image->DebuggerData, FALSE);
+            //KdReportModuleChange(Image->DebuggerData, FALSE);
             EfiCoreFreePool(Image->DebuggerData);
         }
 

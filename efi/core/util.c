@@ -684,15 +684,16 @@ Return Value:
     //
 
     va_start(ArgumentList, Format);
-    KdPrintWithArgumentList(Format, ArgumentList);
+    //KdPrintWithArgumentList(Format, ArgumentList);
     va_end(ArgumentList);
     if (EfiSystemTable->StdErr != NULL) {
         va_start(ArgumentList, Format);
-        RtlFormatString(Ascii,
-                        sizeof(Ascii) - 1,
-                        CharacterEncodingAscii,
-                        Format,
-                        ArgumentList);
+        //RtlFormatString(Ascii,
+        //                sizeof(Ascii) - 1,
+        //                CharacterEncodingAscii,
+        //                Format,
+        //                ArgumentList);
+	//TODO: replace with debug()
 
         Index = 0;
         while (Ascii[Index] != '\0') {

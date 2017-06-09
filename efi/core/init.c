@@ -335,41 +335,41 @@ Return Value:
     // exceptions and use the serial port.
     //
 
-    EfipInitializeProcessor();
-    Step += 1;
-    DebugModule = (PDEBUG_MODULE)EfiModuleBuffer;
+    //EfipInitializeProcessor();
+    //Step += 1;
+    //DebugModule = (PDEBUG_MODULE)EfiModuleBuffer;
 
     //
     // Initialize the debugging subsystem.
     //
 
-    RtlZeroMemory(&EfiModuleBuffer, sizeof(EfiModuleBuffer));
-    ModuleNameLength = RtlStringLength(FirmwareBinaryName) + 1;
-    if (ModuleNameLength > EFI_FIRMWARE_BINARY_NAME_MAX_SIZE) {
-        ModuleNameLength = EFI_FIRMWARE_BINARY_NAME_MAX_SIZE;
-    }
+    //RtlZeroMemory(&EfiModuleBuffer, sizeof(EfiModuleBuffer));
+    //ModuleNameLength = RtlStringLength(FirmwareBinaryName) + 1;
+    //if (ModuleNameLength > EFI_FIRMWARE_BINARY_NAME_MAX_SIZE) {
+    //    ModuleNameLength = EFI_FIRMWARE_BINARY_NAME_MAX_SIZE;
+    //}
 
-    DebugModule->StructureSize = sizeof(DEBUG_MODULE) + ModuleNameLength -
-                                 (ANYSIZE_ARRAY * sizeof(CHAR));
+    //DebugModule->StructureSize = sizeof(DEBUG_MODULE) + ModuleNameLength -
+    //                             (ANYSIZE_ARRAY * sizeof(CHAR));
 
-    RtlStringCopy(DebugModule->BinaryName,
-                  FirmwareBinaryName,
-                  ModuleNameLength);
+    //RtlStringCopy(DebugModule->BinaryName,
+    //              FirmwareBinaryName,
+    //              ModuleNameLength);
 
-    DebugModule->LowestAddress = FirmwareLowestAddress;
-    DebugModule->Size = FirmwareSize;
-    if (EfiDebugFirmware != FALSE) {
+    //DebugModule->LowestAddress = FirmwareLowestAddress;
+    //DebugModule->Size = FirmwareSize;
+    //if (EfiDebugFirmware != FALSE) {
 
-        //
-        // Stall does not work this early, so prevent KD from using it.
-        //
+    //    //
+    //    // Stall does not work this early, so prevent KD from using it.
+    //    //
 
-        OriginalTimeout = KdSetConnectionTimeout(MAX_ULONG);
-        KStatus = KdInitialize(&EfiDebugDevice, DebugModule);
-        if (!KSUCCESS(KStatus)) {
-            goto InitializeEnd;
-        }
-    }
+    //    OriginalTimeout = KdSetConnectionTimeout(MAX_ULONG);
+    //    KStatus = KdInitialize(&EfiDebugDevice, DebugModule);
+    //    if (!KSUCCESS(KStatus)) {
+    //        goto InitializeEnd;
+    //    }
+    //}
 
     //
     // Initialize the runtime protocol template.
@@ -389,7 +389,8 @@ Return Value:
     // debuggable.
     //
 
-    EfiStatus = EfiPlatformInitialize(0);
+    //TODO
+    //EfiStatus = EfiPlatformInitialize(0);
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
@@ -470,9 +471,9 @@ Return Value:
     // Allow KD to use stall now that timer services are set up.
     //
 
-    if (EfiDebugFirmware != FALSE) {
-        KdSetConnectionTimeout(OriginalTimeout);
-    }
+    //if (EfiDebugFirmware != FALSE) {
+    //    KdSetConnectionTimeout(OriginalTimeout);
+    //}
 
     EfiStatus = EfiCoreInitializeImageServices(FirmwareBaseAddress,
                                                FirmwareLowestAddress,
@@ -505,7 +506,7 @@ Return Value:
     }
 
     Step += 1;
-    EfiStatus = EfiPlatformInitialize(1);
+    //EfiStatus = EfiPlatformInitialize(1);
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
@@ -550,7 +551,7 @@ Return Value:
     //
 
     Step += 1;
-    EfiStatus = EfiPlatformEnumerateFirmwareVolumes();
+    //EfiStatus = EfiPlatformEnumerateFirmwareVolumes();
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
@@ -580,13 +581,13 @@ Return Value:
     //
 
     Step += 1;
-    EfiStatus = EfiPlatformEnumerateDevices();
+    //EfiStatus = EfiPlatformEnumerateDevices();
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
 
     Step += 1;
-    EfiStatus = EfiPlatformInitialize(2);
+    //EfiStatus = EfiPlatformInitialize(2);
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
@@ -625,7 +626,7 @@ InitializeEnd:
                   Step);
 
     while (TRUE) {
-        RtlDebugBreak();
+    //    RtlDebugBreak();
     }
 
     return;
