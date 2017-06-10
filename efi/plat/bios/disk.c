@@ -709,48 +709,48 @@ Return Value:
     // Create a standard BIOS call context.
     //
 
-    Status = EfipCreateBiosCallContext(&RealModeContext, 0x13);
-    if (EFI_ERROR(Status)) {
-        goto GetDiskGeometryEnd;
-    }
-
-    //
-    // Int 13 function 8 is "Get disk parameters". Ah takes the function number
-    // (8), and dl takes the drive number.
-    //
-
-    RealModeContext.Eax = INT13_EXTENDED_GET_DRIVE_PARAMETERS << 8;
-    RealModeContext.Edx = DriveNumber;
-    RealModeContext.Ds = 0;
-    BufferAddress = (UINTN)(RealModeContext.DataPage);
-    RealModeContext.Esi = (UINT16)BufferAddress;
-    Parameters = (PINT13_EXTENDED_DRIVE_PARAMETERS)(UINTN)BufferAddress;
-    EfiSetMem(Parameters, sizeof(INT13_EXTENDED_DRIVE_PARAMETERS), 0);
-    Parameters->PacketSize = sizeof(INT13_EXTENDED_DRIVE_PARAMETERS);
-
-    //
-    // Execute the firmware call.
-    //
-
-    EfipExecuteBiosCall(&RealModeContext);
-
-    //
-    // Check for an error. The status code is in Ah.
-    //
-
-    if (((RealModeContext.Eax & 0xFF00) != 0) ||
-        ((RealModeContext.Eflags & IA32_EFLAG_CF) != 0)) {
-
-        Status = EFI_NOT_FOUND;
-        goto GetDiskGeometryEnd;
-    }
-
-    *SectorCount = Parameters->TotalSectorCount;
-    *SectorSize = Parameters->SectorSize;
+//    Status = EfipCreateBiosCallContext(&RealModeContext, 0x13);
+//    if (EFI_ERROR(Status)) {
+//        goto GetDiskGeometryEnd;
+//    }
+//
+//    //
+//    // Int 13 function 8 is "Get disk parameters". Ah takes the function number
+//    // (8), and dl takes the drive number.
+//    //
+//
+//    RealModeContext.Eax = INT13_EXTENDED_GET_DRIVE_PARAMETERS << 8;
+//    RealModeContext.Edx = DriveNumber;
+//    RealModeContext.Ds = 0;
+//    BufferAddress = (UINTN)(RealModeContext.DataPage);
+//    RealModeContext.Esi = (UINT16)BufferAddress;
+//    Parameters = (PINT13_EXTENDED_DRIVE_PARAMETERS)(UINTN)BufferAddress;
+//    EfiSetMem(Parameters, sizeof(INT13_EXTENDED_DRIVE_PARAMETERS), 0);
+//    Parameters->PacketSize = sizeof(INT13_EXTENDED_DRIVE_PARAMETERS);
+//
+//    //
+//    // Execute the firmware call.
+//    //
+//
+//    EfipExecuteBiosCall(&RealModeContext);
+//
+//    //
+//    // Check for an error. The status code is in Ah.
+//    //
+//
+//    if (((RealModeContext.Eax & 0xFF00) != 0) ||
+//        ((RealModeContext.Eflags & IA32_EFLAG_CF) != 0)) {
+//
+//        Status = EFI_NOT_FOUND;
+//        goto GetDiskGeometryEnd;
+//    }
+//
+//    *SectorCount = Parameters->TotalSectorCount;
+//    *SectorSize = Parameters->SectorSize;
     Status = EFI_SUCCESS;
-
-GetDiskGeometryEnd:
-    EfipDestroyBiosCallContext(&RealModeContext);
+//
+//GetDiskGeometryEnd:
+//    EfipDestroyBiosCallContext(&RealModeContext);
     return Status;
 }
 
@@ -805,68 +805,68 @@ Return Value:
     // Create a standard BIOS call context.
     //
 
-    Status = EfipCreateBiosCallContext(&RealModeContext, 0x13);
-    if (EFI_ERROR(Status)) {
-        goto BlockOperationEnd;
-    }
-
-    //
-    // Create the disk access packet on the stack.
-    //
-
-    Request = (PINT13_DISK_ACCESS_PACKET)(RealModeContext.Esp -
-                                          sizeof(INT13_DISK_ACCESS_PACKET));
-
-    Request->PacketSize = sizeof(INT13_DISK_ACCESS_PACKET);
-    Request->Reserved = 0;
-    Request->BlockCount = SectorCount;
-    RealModeBuffer = (UINTN)(RealModeContext.DataPage);
-    Request->TransferBuffer = (UINTN)RealModeBuffer;
-    Request->BlockAddress = AbsoluteSector;
-    RealModeContext.Edx = Disk->DriveNumber;
-    RealModeContext.Esp = (UINTN)Request;
-    RealModeContext.Esi = (UINTN)Request;
-    if (Write != FALSE) {
-        RealModeContext.Eax = INT13_EXTENDED_WRITE << 8;
-        EfiCopyMem((VOID *)RealModeBuffer,
-                   Buffer,
-                   SectorCount * Disk->SectorSize);
-
-    } else {
-        RealModeContext.Eax = INT13_EXTENDED_READ << 8;
-    }
-
-    //
-    // Execute the firmware call.
-    //
-
-    EfipExecuteBiosCall(&RealModeContext);
-
-    //
-    // Check for an error (carry flag set). The status code is in Ah.
-    //
-
-    if (((RealModeContext.Eax & 0xFF00) != 0) ||
-        ((RealModeContext.Eflags & IA32_EFLAG_CF) != 0)) {
-
-        Status = EFI_DEVICE_ERROR;
-        goto BlockOperationEnd;
-    }
-
-    //
-    // Copy the data over from the real mode data page to the caller's buffer.
-    //
-
-    if (Write == FALSE) {
-        EfiCopyMem(Buffer,
-                   (VOID *)RealModeBuffer,
-                   SectorCount * Disk->SectorSize);
-    }
-
+//    Status = EfipCreateBiosCallContext(&RealModeContext, 0x13);
+//    if (EFI_ERROR(Status)) {
+//        goto BlockOperationEnd;
+//    }
+//
+//    //
+//    // Create the disk access packet on the stack.
+//    //
+//
+//    Request = (PINT13_DISK_ACCESS_PACKET)(RealModeContext.Esp -
+//                                          sizeof(INT13_DISK_ACCESS_PACKET));
+//
+//    Request->PacketSize = sizeof(INT13_DISK_ACCESS_PACKET);
+//    Request->Reserved = 0;
+//    Request->BlockCount = SectorCount;
+//    RealModeBuffer = (UINTN)(RealModeContext.DataPage);
+//    Request->TransferBuffer = (UINTN)RealModeBuffer;
+//    Request->BlockAddress = AbsoluteSector;
+//    RealModeContext.Edx = Disk->DriveNumber;
+//    RealModeContext.Esp = (UINTN)Request;
+//    RealModeContext.Esi = (UINTN)Request;
+//    if (Write != FALSE) {
+//        RealModeContext.Eax = INT13_EXTENDED_WRITE << 8;
+//        EfiCopyMem((VOID *)RealModeBuffer,
+//                   Buffer,
+//                   SectorCount * Disk->SectorSize);
+//
+//    } else {
+//        RealModeContext.Eax = INT13_EXTENDED_READ << 8;
+//    }
+//
+//    //
+//    // Execute the firmware call.
+//    //
+//
+//    EfipExecuteBiosCall(&RealModeContext);
+//
+//    //
+//    // Check for an error (carry flag set). The status code is in Ah.
+//    //
+//
+//    if (((RealModeContext.Eax & 0xFF00) != 0) ||
+//        ((RealModeContext.Eflags & IA32_EFLAG_CF) != 0)) {
+//
+//        Status = EFI_DEVICE_ERROR;
+//        goto BlockOperationEnd;
+//    }
+//
+//    //
+//    // Copy the data over from the real mode data page to the caller's buffer.
+//    //
+//
+//    if (Write == FALSE) {
+//        EfiCopyMem(Buffer,
+//                   (VOID *)RealModeBuffer,
+//                   SectorCount * Disk->SectorSize);
+//    }
+//
     Status = EFI_SUCCESS;
-
-BlockOperationEnd:
-    EfipDestroyBiosCallContext(&RealModeContext);
+//
+//BlockOperationEnd:
+//    EfipDestroyBiosCallContext(&RealModeContext);
     return Status;
 }
 
@@ -911,39 +911,39 @@ Return Value:
     // Create a standard BIOS call context.
     //
 
-    Status = EfipCreateBiosCallContext(&RealModeContext, 0x13);
-    if (EFI_ERROR(Status)) {
-        goto PcatResetDiskEnd;
-    }
-
-    //
-    // Int 13 function zero is reset.
-    //
-
-    RealModeContext.Eax = INT13_EXTENDED_GET_DRIVE_PARAMETERS << 8;
-    RealModeContext.Edx = DriveNumber;
-
-    //
-    // Execute the firmware call.
-    //
-
-    EfipExecuteBiosCall(&RealModeContext);
-
-    //
-    // Check for an error. The status code is in Ah.
-    //
-
-    if (((RealModeContext.Eax & 0xFF00) != 0) ||
-        ((RealModeContext.Eflags & IA32_EFLAG_CF) != 0)) {
-
-        Status = EFI_DEVICE_ERROR;
-        goto PcatResetDiskEnd;
-    }
-
+//    Status = EfipCreateBiosCallContext(&RealModeContext, 0x13);
+//    if (EFI_ERROR(Status)) {
+//        goto PcatResetDiskEnd;
+//    }
+//
+//    //
+//    // Int 13 function zero is reset.
+//    //
+//
+//    RealModeContext.Eax = INT13_EXTENDED_GET_DRIVE_PARAMETERS << 8;
+//    RealModeContext.Edx = DriveNumber;
+//
+//    //
+//    // Execute the firmware call.
+//    //
+//
+//    EfipExecuteBiosCall(&RealModeContext);
+//
+//    //
+//    // Check for an error. The status code is in Ah.
+//    //
+//
+//    if (((RealModeContext.Eax & 0xFF00) != 0) ||
+//        ((RealModeContext.Eflags & IA32_EFLAG_CF) != 0)) {
+//
+//        Status = EFI_DEVICE_ERROR;
+//        goto PcatResetDiskEnd;
+//    }
+//
     Status = EFI_SUCCESS;
-
-PcatResetDiskEnd:
-    EfipDestroyBiosCallContext(&RealModeContext);
+//
+//PcatResetDiskEnd:
+//    EfipDestroyBiosCallContext(&RealModeContext);
     return Status;
 }
 

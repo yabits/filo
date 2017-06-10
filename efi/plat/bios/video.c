@@ -1066,48 +1066,48 @@ Return Value:
     // Create a standard BIOS call context.
     //
 
-    Status = EfipCreateBiosCallContext(&RealModeContext, 0x10);
-    if (EFI_ERROR(Status)) {
-        goto GetVesaInformationEnd;
-    }
-
-    //
-    // Copy the signature into the data page.
-    //
-
-    InformationData = RealModeContext.DataPage;
-    InformationData->Signature = Information->Signature;
-
-    //
-    // Set up the call to int 10, VESA function 0, get information.
-    //
-
-    RealModeContext.Eax = VESA_FUNCTION_GET_VESA_INFORMATION;
-    RealModeContext.Es = ADDRESS_TO_SEGMENT((UINTN)RealModeContext.DataPage);
-    RealModeContext.Edi = (UINTN)(RealModeContext.DataPage) & 0x0F;
-
-    //
-    // Execute the firmware call.
-    //
-
-    EfipExecuteBiosCall(&RealModeContext);
-
-    //
-    // Check for an error. The status code is in Ah.
-    //
-
-    if (((RealModeContext.Eax & 0xFF00) != 0) ||
-        ((RealModeContext.Eax & 0x00FF) != 0x4F)) {
-
-        Status = EFI_DEVICE_ERROR;
-        goto GetVesaInformationEnd;
-    }
-
-    EfiCopyMem(Information, InformationData, sizeof(VESA_INFORMATION));
+//    Status = EfipCreateBiosCallContext(&RealModeContext, 0x10);
+//    if (EFI_ERROR(Status)) {
+//        goto GetVesaInformationEnd;
+//    }
+//
+//    //
+//    // Copy the signature into the data page.
+//    //
+//
+//    InformationData = RealModeContext.DataPage;
+//    InformationData->Signature = Information->Signature;
+//
+//    //
+//    // Set up the call to int 10, VESA function 0, get information.
+//    //
+//
+//    RealModeContext.Eax = VESA_FUNCTION_GET_VESA_INFORMATION;
+//    RealModeContext.Es = ADDRESS_TO_SEGMENT((UINTN)RealModeContext.DataPage);
+//    RealModeContext.Edi = (UINTN)(RealModeContext.DataPage) & 0x0F;
+//
+//    //
+//    // Execute the firmware call.
+//    //
+//
+//    EfipExecuteBiosCall(&RealModeContext);
+//
+//    //
+//    // Check for an error. The status code is in Ah.
+//    //
+//
+//    if (((RealModeContext.Eax & 0xFF00) != 0) ||
+//        ((RealModeContext.Eax & 0x00FF) != 0x4F)) {
+//
+//        Status = EFI_DEVICE_ERROR;
+//        goto GetVesaInformationEnd;
+//    }
+//
+//    EfiCopyMem(Information, InformationData, sizeof(VESA_INFORMATION));
     Status = EFI_SUCCESS;
-
-GetVesaInformationEnd:
-    EfipDestroyBiosCallContext(&RealModeContext);
+//
+//GetVesaInformationEnd:
+//    EfipDestroyBiosCallContext(&RealModeContext);
     return Status;
 }
 
@@ -1146,45 +1146,45 @@ Return Value:
     // Create a standard BIOS call context.
     //
 
-    Status = EfipCreateBiosCallContext(&RealModeContext, 0x10);
-    if (EFI_ERROR(Status)) {
-        goto GetVesaModeInformationEnd;
-    }
-
-    //
-    // Set up the call to int 10, VESA function 1, get mode information.
-    //
-
-    RealModeContext.Eax = VESA_FUNCTION_GET_MODE_INFORMATION;
-    RealModeContext.Es = ADDRESS_TO_SEGMENT((UINTN)RealModeContext.DataPage);
-    RealModeContext.Edi = (UINTN)RealModeContext.DataPage & 0x0F;
-    RealModeContext.Ecx = ModeNumber;
-
-    //
-    // Execute the firmware call.
-    //
-
-    EfipExecuteBiosCall(&RealModeContext);
-
-    //
-    // Check for an error. The status code is in Ah.
-    //
-
-    if (((RealModeContext.Eax & 0xFF00) != 0) ||
-        ((RealModeContext.Eax & 0x00FF) != 0x4F)) {
-
-        Status = EFI_DEVICE_ERROR;
-        goto GetVesaModeInformationEnd;
-    }
-
-    EfiCopyMem(ModeInformation,
-               RealModeContext.DataPage,
-               sizeof(VESA_MODE_INFORMATION));
-
+//    Status = EfipCreateBiosCallContext(&RealModeContext, 0x10);
+//    if (EFI_ERROR(Status)) {
+//        goto GetVesaModeInformationEnd;
+//    }
+//
+//    //
+//    // Set up the call to int 10, VESA function 1, get mode information.
+//    //
+//
+//    RealModeContext.Eax = VESA_FUNCTION_GET_MODE_INFORMATION;
+//    RealModeContext.Es = ADDRESS_TO_SEGMENT((UINTN)RealModeContext.DataPage);
+//    RealModeContext.Edi = (UINTN)RealModeContext.DataPage & 0x0F;
+//    RealModeContext.Ecx = ModeNumber;
+//
+//    //
+//    // Execute the firmware call.
+//    //
+//
+//    EfipExecuteBiosCall(&RealModeContext);
+//
+//    //
+//    // Check for an error. The status code is in Ah.
+//    //
+//
+//    if (((RealModeContext.Eax & 0xFF00) != 0) ||
+//        ((RealModeContext.Eax & 0x00FF) != 0x4F)) {
+//
+//        Status = EFI_DEVICE_ERROR;
+//        goto GetVesaModeInformationEnd;
+//    }
+//
+//    EfiCopyMem(ModeInformation,
+//               RealModeContext.DataPage,
+//               sizeof(VESA_MODE_INFORMATION));
+//
     Status = EFI_SUCCESS;
-
-GetVesaModeInformationEnd:
-    EfipDestroyBiosCallContext(&RealModeContext);
+//
+//GetVesaModeInformationEnd:
+//    EfipDestroyBiosCallContext(&RealModeContext);
     return Status;
 }
 
@@ -1218,41 +1218,41 @@ Return Value:
     // Create a standard BIOS call context.
     //
 
-    Status = EfipCreateBiosCallContext(&RealModeContext, 0x10);
-    if (EFI_ERROR(Status)) {
-        goto PcatSetVesaModeEnd;
-    }
-
-    //
-    // Set up the call to int 10, VESA function 1, get mode information.
-    //
-
-    RealModeContext.Eax = VESA_FUNCTION_SET_MODE;
-    RealModeContext.Ebx = ModeNumber |
-                          VESA_MODE_NUMBER_USE_LINEAR_MODEL |
-                          VESA_MODE_NUMBER_DONT_CLEAR_DISPLAY;
-
-    //
-    // Execute the firmware call.
-    //
-
-    EfipExecuteBiosCall(&RealModeContext);
-
-    //
-    // Check for an error. The status code is in Ah.
-    //
-
-    if (((RealModeContext.Eax & 0xFF00) != 0) ||
-        ((RealModeContext.Eax & 0x00FF) != 0x4F)) {
-
-        Status = EFI_DEVICE_ERROR;
-        goto PcatSetVesaModeEnd;
-    }
-
+//    Status = EfipCreateBiosCallContext(&RealModeContext, 0x10);
+//    if (EFI_ERROR(Status)) {
+//        goto PcatSetVesaModeEnd;
+//    }
+//
+//    //
+//    // Set up the call to int 10, VESA function 1, get mode information.
+//    //
+//
+//    RealModeContext.Eax = VESA_FUNCTION_SET_MODE;
+//    RealModeContext.Ebx = ModeNumber |
+//                          VESA_MODE_NUMBER_USE_LINEAR_MODEL |
+//                          VESA_MODE_NUMBER_DONT_CLEAR_DISPLAY;
+//
+//    //
+//    // Execute the firmware call.
+//    //
+//
+//    EfipExecuteBiosCall(&RealModeContext);
+//
+//    //
+//    // Check for an error. The status code is in Ah.
+//    //
+//
+//    if (((RealModeContext.Eax & 0xFF00) != 0) ||
+//        ((RealModeContext.Eax & 0x00FF) != 0x4F)) {
+//
+//        Status = EFI_DEVICE_ERROR;
+//        goto PcatSetVesaModeEnd;
+//    }
+//
     Status = EFI_SUCCESS;
-
-PcatSetVesaModeEnd:
-    EfipDestroyBiosCallContext(&RealModeContext);
+//
+//PcatSetVesaModeEnd:
+//    EfipDestroyBiosCallContext(&RealModeContext);
     return Status;
 }
 

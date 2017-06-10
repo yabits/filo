@@ -195,187 +195,187 @@ Return Value:
     UINTN SearchIndex;
     EFI_STATUS Status;
 
-    DescriptorCount = 0;
-    FirstCall = TRUE;
-    MaxDescriptors = *MapSize;
-    Status = EfipCreateBiosCallContext(&RealModeContext, 0x15);
-    if (EFI_ERROR(Status)) {
-        goto GetMemoryMapEnd;
-    }
-
-    E820Descriptor = (PE820_DESCRIPTOR)RealModeContext.DataPage;
-    RealModeContext.Ebx = 0;
-    do {
-
-        //
-        // Watch for overflow conditions or buggy firmware.
-        //
-
-        if (DescriptorCount >= MaxDescriptors) {
-            break;
-        }
-
-        //
-        // Set up the firmware call.
-        //
-
-        E820Descriptor->Type = E820TypeInvalid;
-        RealModeContext.Es =
-                           ADDRESS_TO_SEGMENT((UINTN)RealModeContext.DataPage);
-
-        RealModeContext.Edi = (UINTN)RealModeContext.DataPage & 0xF;
-        RealModeContext.Edx = E820_MAGIC;
-        RealModeContext.Eax = 0xE820;
-        RealModeContext.Ecx = 24;
-
-        //
-        // Execute the firmware call.
-        //
-
-        EfipExecuteBiosCall(&RealModeContext);
-
-        //
-        // If eax is not set to the magic number (on the first call only), or
-        // the carry clag is clear, then the call failed.
-        //
-
-        if ((FirstCall != FALSE) && (RealModeContext.Eax != E820_MAGIC)) {
-            break;
-        }
-
-        FirstCall = FALSE;
-        if ((RealModeContext.Eflags & IA32_EFLAG_CF) != 0) {
-            break;
-        }
-
-        //
-        // Get the descriptor information.
-        //
-
-        BaseAddress =
-                ((EFI_PHYSICAL_ADDRESS)E820Descriptor->BaseAddressHigh << 32) |
-                 (E820Descriptor->BaseAddressLow);
-
-        Length = ((EFI_PHYSICAL_ADDRESS)E820Descriptor->LengthHigh << 32) |
-                 (E820Descriptor->LengthLow);
-
-        E820Type = E820Descriptor->Type;
-        switch (E820Type) {
-        case E820TypeUsableMemory:
-            DescriptorType = EfiConventionalMemory;
-            break;
-
-        case E820TypeReserved:
-            DescriptorType = EfiRuntimeServicesData;
-            break;
-
-        case E820TypeAcpiReclaimable:
-            DescriptorType = EfiACPIReclaimMemory;
-            break;
-
-        case E820TypeAcpiReserved:
-            DescriptorType = EfiACPIMemoryNVS;
-            break;
-
-        case E820TypeBadMemory:
-            DescriptorType = EfiUnusableMemory;
-            break;
-
-        //
-        // Unknown memory type. Skip this descriptor.
-        //
-
-        default:
-            continue;
-        }
-
-        Descriptor.Type = DescriptorType;
-        Descriptor.Padding = 0;
-        Descriptor.PhysicalStart = BaseAddress;
-        Descriptor.VirtualStart = 0;
-        Descriptor.NumberOfPages = EFI_SIZE_TO_PAGES(Length);
-        Descriptor.Attribute = 0;
-
-        //
-        // Add the descriptor to the memory map.
-        //
-
-        Status = EfipAddBiosMemoryDescriptor(Map,
-                                             &Descriptor,
-                                             &DescriptorCount,
-                                             MaxDescriptors,
-                                             FALSE);
-
-        if (EFI_ERROR(Status)) {
-            goto GetMemoryMapEnd;
-        }
-
-    } while ((RealModeContext.Ebx != 0) &&
-            ((RealModeContext.Eflags & IA32_EFLAG_CF) == 0));
-
-    //
-    // Simply reserve the entire first megabyte.
-    //
-
-    Descriptor.Type = EfiUnusableMemory;
-    Descriptor.Padding = 0;
-    Descriptor.PhysicalStart = 0;
-    Descriptor.NumberOfPages = (1024 * 1024) >> EFI_PAGE_SHIFT;
-    Status = EfipAddBiosMemoryDescriptor(Map,
-                                         &Descriptor,
-                                         &DescriptorCount,
-                                         MaxDescriptors,
-                                         TRUE);
-
-    if (EFI_ERROR(Status)) {
-        goto GetMemoryMapEnd;
-    }
-
-    //
-    // Mark a portion of that first megabyte usable between 0x1000 and 0x9F000.
-    //
-
-    Descriptor.Type = EfiConventionalMemory;
-    Descriptor.Padding = 0;
-    Descriptor.PhysicalStart = 0x1000;
-    Descriptor.NumberOfPages = 0x9E;
-    Status = EfipAddBiosMemoryDescriptor(Map,
-                                         &Descriptor,
-                                         &DescriptorCount,
-                                         MaxDescriptors,
-                                         TRUE);
-
-    if (EFI_ERROR(Status)) {
-        goto GetMemoryMapEnd;
-    }
-
-    //
-    // Remove any empty regions.
-    //
-
-    SearchIndex = 0;
-    while (SearchIndex < DescriptorCount) {
-        Search = &(Map[SearchIndex]);
-        if (Search->NumberOfPages == 0) {
-            for (MoveIndex = SearchIndex;
-                 MoveIndex < DescriptorCount - 1;
-                 MoveIndex += 1) {
-
-                Map[MoveIndex] = Map[MoveIndex + 1];
-            }
-
-            DescriptorCount -= 1;
-            continue;
-        }
-
-        SearchIndex += 1;
-    }
-
+//    DescriptorCount = 0;
+//    FirstCall = TRUE;
+//    MaxDescriptors = *MapSize;
+//    Status = EfipCreateBiosCallContext(&RealModeContext, 0x15);
+//    if (EFI_ERROR(Status)) {
+//        goto GetMemoryMapEnd;
+//    }
+//
+//    E820Descriptor = (PE820_DESCRIPTOR)RealModeContext.DataPage;
+//    RealModeContext.Ebx = 0;
+//    do {
+//
+//        //
+//        // Watch for overflow conditions or buggy firmware.
+//        //
+//
+//        if (DescriptorCount >= MaxDescriptors) {
+//            break;
+//        }
+//
+//        //
+//        // Set up the firmware call.
+//        //
+//
+//        E820Descriptor->Type = E820TypeInvalid;
+//        RealModeContext.Es =
+//                           ADDRESS_TO_SEGMENT((UINTN)RealModeContext.DataPage);
+//
+//        RealModeContext.Edi = (UINTN)RealModeContext.DataPage & 0xF;
+//        RealModeContext.Edx = E820_MAGIC;
+//        RealModeContext.Eax = 0xE820;
+//        RealModeContext.Ecx = 24;
+//
+//        //
+//        // Execute the firmware call.
+//        //
+//
+//        EfipExecuteBiosCall(&RealModeContext);
+//
+//        //
+//        // If eax is not set to the magic number (on the first call only), or
+//        // the carry clag is clear, then the call failed.
+//        //
+//
+//        if ((FirstCall != FALSE) && (RealModeContext.Eax != E820_MAGIC)) {
+//            break;
+//        }
+//
+//        FirstCall = FALSE;
+//        if ((RealModeContext.Eflags & IA32_EFLAG_CF) != 0) {
+//            break;
+//        }
+//
+//        //
+//        // Get the descriptor information.
+//        //
+//
+//        BaseAddress =
+//                ((EFI_PHYSICAL_ADDRESS)E820Descriptor->BaseAddressHigh << 32) |
+//                 (E820Descriptor->BaseAddressLow);
+//
+//        Length = ((EFI_PHYSICAL_ADDRESS)E820Descriptor->LengthHigh << 32) |
+//                 (E820Descriptor->LengthLow);
+//
+//        E820Type = E820Descriptor->Type;
+//        switch (E820Type) {
+//        case E820TypeUsableMemory:
+//            DescriptorType = EfiConventionalMemory;
+//            break;
+//
+//        case E820TypeReserved:
+//            DescriptorType = EfiRuntimeServicesData;
+//            break;
+//
+//        case E820TypeAcpiReclaimable:
+//            DescriptorType = EfiACPIReclaimMemory;
+//            break;
+//
+//        case E820TypeAcpiReserved:
+//            DescriptorType = EfiACPIMemoryNVS;
+//            break;
+//
+//        case E820TypeBadMemory:
+//            DescriptorType = EfiUnusableMemory;
+//            break;
+//
+//        //
+//        // Unknown memory type. Skip this descriptor.
+//        //
+//
+//        default:
+//            continue;
+//        }
+//
+//        Descriptor.Type = DescriptorType;
+//        Descriptor.Padding = 0;
+//        Descriptor.PhysicalStart = BaseAddress;
+//        Descriptor.VirtualStart = 0;
+//        Descriptor.NumberOfPages = EFI_SIZE_TO_PAGES(Length);
+//        Descriptor.Attribute = 0;
+//
+//        //
+//        // Add the descriptor to the memory map.
+//        //
+//
+//        Status = EfipAddBiosMemoryDescriptor(Map,
+//                                             &Descriptor,
+//                                             &DescriptorCount,
+//                                             MaxDescriptors,
+//                                             FALSE);
+//
+//        if (EFI_ERROR(Status)) {
+//            goto GetMemoryMapEnd;
+//        }
+//
+//    } while ((RealModeContext.Ebx != 0) &&
+//            ((RealModeContext.Eflags & IA32_EFLAG_CF) == 0));
+//
+//    //
+//    // Simply reserve the entire first megabyte.
+//    //
+//
+//    Descriptor.Type = EfiUnusableMemory;
+//    Descriptor.Padding = 0;
+//    Descriptor.PhysicalStart = 0;
+//    Descriptor.NumberOfPages = (1024 * 1024) >> EFI_PAGE_SHIFT;
+//    Status = EfipAddBiosMemoryDescriptor(Map,
+//                                         &Descriptor,
+//                                         &DescriptorCount,
+//                                         MaxDescriptors,
+//                                         TRUE);
+//
+//    if (EFI_ERROR(Status)) {
+//        goto GetMemoryMapEnd;
+//    }
+//
+//    //
+//    // Mark a portion of that first megabyte usable between 0x1000 and 0x9F000.
+//    //
+//
+//    Descriptor.Type = EfiConventionalMemory;
+//    Descriptor.Padding = 0;
+//    Descriptor.PhysicalStart = 0x1000;
+//    Descriptor.NumberOfPages = 0x9E;
+//    Status = EfipAddBiosMemoryDescriptor(Map,
+//                                         &Descriptor,
+//                                         &DescriptorCount,
+//                                         MaxDescriptors,
+//                                         TRUE);
+//
+//    if (EFI_ERROR(Status)) {
+//        goto GetMemoryMapEnd;
+//    }
+//
+//    //
+//    // Remove any empty regions.
+//    //
+//
+//    SearchIndex = 0;
+//    while (SearchIndex < DescriptorCount) {
+//        Search = &(Map[SearchIndex]);
+//        if (Search->NumberOfPages == 0) {
+//            for (MoveIndex = SearchIndex;
+//                 MoveIndex < DescriptorCount - 1;
+//                 MoveIndex += 1) {
+//
+//                Map[MoveIndex] = Map[MoveIndex + 1];
+//            }
+//
+//            DescriptorCount -= 1;
+//            continue;
+//        }
+//
+//        SearchIndex += 1;
+//    }
+//
     Status = EFI_SUCCESS;
-
-GetMemoryMapEnd:
-    *MapSize = DescriptorCount;
-    EfipDestroyBiosCallContext(&RealModeContext);
+//
+//GetMemoryMapEnd:
+//    *MapSize = DescriptorCount;
+//    EfipDestroyBiosCallContext(&RealModeContext);
     return Status;
 }
 
