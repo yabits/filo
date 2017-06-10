@@ -16,7 +16,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-include efi/archlib/Makefile.inc
-include efi/core/Makefile.inc
-include efi/lib/Makefile.inc
-include efi/plat/Makefile.inc
+TARGETS-y += efi/archlib/x86/archlib.o
+TARGETS-y += efi/archlib/x86/archsup.S.o
+TARGETS-y += efi/archlib/x86/ioport.S.o
+TARGETS-y += efi/archlib/x86/regacces.o
