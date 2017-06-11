@@ -16,12 +16,15 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
+#include efi/core/rtlib/Makefile.inc
+#include efi/core/runtime/Makefile.inc
 include efi/core/x86/Makefile.inc
 
 TARGETS-y += efi/core/acpi.o efi/core/acpitabs.o
 TARGETS-y += efi/core/basepe.o efi/core/bdsboot.o
 TARGETS-y += efi/core/bdscon.o efi/core/bdsentry.o
 TARGETS-y += efi/core/bdsutil.o efi/core/cfgtable.o
+TARGETS-y += efi/core/crc32.o
 TARGETS-y += efi/core/dbgser.o efi/core/devpathu.o
 TARGETS-y += efi/core/diskio.o efi/core/dispatch.o
 TARGETS-y += efi/core/div.o efi/core/drvsup.o
@@ -39,3 +42,4 @@ TARGETS-y += efi/core/ramdisk.o efi/core/smbios.o
 TARGETS-y += efi/core/stubs.o efi/core/tpl.o
 TARGETS-y += efi/core/timer.o efi/core/util.o
 TARGETS-y += efi/core/version.o efi/core/vidcon.o
+
