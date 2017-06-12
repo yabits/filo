@@ -34,6 +34,7 @@ Environment:
 #include <minoca/kernel/kdebug.h>
 #include <minoca/uefi/uefi.h>
 #include "shortcut.h"
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -94,16 +95,13 @@ Return Value:
     //
 
     va_start(ArgumentList, Format);
-    //TODO
-    //KdPrintWithArgumentList(Format, ArgumentList);
+    printf(Format, ArgumentList);
     va_end(ArgumentList);
     if (EfiSystemTable->StdErr != NULL) {
         va_start(ArgumentList, Format);
-        //RtlFormatString(Ascii,
-        //                sizeof(Ascii) - 1,
-        //                CharacterEncodingAscii,
-        //                Format,
-        //                ArgumentList);
+        snprintf(Ascii, sizeof(Ascii) - 1,
+                        Format,
+                        ArgumentList);
 
         Index = 0;
         while (Ascii[Index] != '\0') {

@@ -33,6 +33,7 @@ Environment:
 #include "ueficore.h"
 #include <minoca/kernel/hmod.h>
 #include <minoca/kernel/kdebug.h>
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -316,6 +317,7 @@ Return Value:
 --*/
 
 {
+    printf("EfiCoreMain\n");
 
     PDEBUG_MODULE DebugModule;
     EFI_STATUS EfiStatus;
