@@ -127,11 +127,11 @@ CPPFLAGS += -I$(INCPAYLOAD) -I$(INCPAYLOAD)/$(ARCHDIR-y)
 CPPFLAGS += -I$(ARCHDIR-y)/include -Iinclude -I$(obj)
 CPPFLAGS += -I$(GCCINCDIR) -include $(INCPAYLOAD)/kconfig.h
 CPPFLAGS += -Iefi/include
-CPPFLAGS += -I/home/akira/Dropbox/Documentation/minoca/os/include
+CPPFLAGS += -I../../../src/minoca/os/include
 CPPFLAGS += -Iefi/lib/rtl
 
 
-CFLAGS := -Wall -Wshadow -Os -pipe
+CFLAGS := -Wall -Wshadow -O0 -g -pipe
 CFLAGS += -fomit-frame-pointer -fno-common -ffreestanding -fno-strict-aliasing
 CFLAGS += $(call cc-option, -fno-stack-protector,)
 

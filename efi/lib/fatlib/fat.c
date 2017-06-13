@@ -939,11 +939,11 @@ Return Value:
     //              sizeof(BLOCK_DEVICE_PARAMETERS));
 
     FatpInitializeFileMappingTree(FatVolume);
-    FatVolume->BlockShift =
-                          RtlCountTrailingZeros32(FatVolume->Device.BlockSize);
+    //FatVolume->BlockShift =
+    //                      RtlCountTrailingZeros32(FatVolume->Device.BlockSize);
 
     FatVolume->ClusterSize = ClusterSize;
-    FatVolume->ClusterShift = RtlCountTrailingZeros32(ClusterSize);
+    //FatVolume->ClusterShift = RtlCountTrailingZeros32(ClusterSize);
     FatVolume->SectorSize = SectorSize;
     FatVolume->ReservedSectorCount =
                             FAT_READ_INT16(&(BootSector->ReservedSectorCount));

@@ -330,6 +330,7 @@ Return Value:
     VOID *Allocation;
     EFI_STATUS Status;
 
+    printf("EfiCoreAllocateRuntimePool");
     Status = EfiAllocatePool(EfiRuntimeServicesData, Size, &Allocation);
     if (EFI_ERROR(Status)) {
         return NULL;

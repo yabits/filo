@@ -317,8 +317,6 @@ Return Value:
 --*/
 
 {
-    printf("EfiCoreMain\n");
-
     PDEBUG_MODULE DebugModule;
     EFI_STATUS EfiStatus;
     KSTATUS KStatus;
@@ -391,11 +389,10 @@ Return Value:
     // debuggable.
     //
 
-    //TODO
     //EfiStatus = EfiPlatformInitialize(0);
-    if (EFI_ERROR(EfiStatus)) {
-        goto InitializeEnd;
-    }
+    //if (EFI_ERROR(EfiStatus)) {
+    //    goto InitializeEnd;
+    //}
 
     Step += 1;
     EfiCoreInitializeHandleDatabase();
@@ -404,11 +401,11 @@ Return Value:
         goto InitializeEnd;
     }
 
-    Step += 1;
-    EfiStatus = EfiCoreInitializeMemoryServices(FirmwareLowestAddress,
-                                                FirmwareSize,
-                                                StackBase,
-                                                StackSize);
+    //Step += 1;
+    //EfiStatus = EfiCoreInitializeMemoryServices(FirmwareLowestAddress,
+    //                                            FirmwareSize,
+    //                                            StackBase,
+    //                                            StackSize);
 
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
@@ -420,11 +417,11 @@ Return Value:
         goto InitializeEnd;
     }
 
-    Step += 1;
-    EfiStatus = EfiCoreInitializeInterruptServices();
-    if (EFI_ERROR(EfiStatus)) {
-        goto InitializeEnd;
-    }
+    //Step += 1;
+    //EfiStatus = EfiCoreInitializeInterruptServices();
+    //if (EFI_ERROR(EfiStatus)) {
+    //    goto InitializeEnd;
+    //}
 
     Step += 1;
     EfiStatus = EfiCoreInitializeTimerServices();
